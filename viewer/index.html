@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ESP32 Camera Viewer</title>
+</head>
+
+<body>
+
+<h1>ESP32 Camera Viewer</h1>
+
+<p>Latest image from the ESP32:</p>
+
+<img id="camera" width="640">
+
+<script>
+
+const SERVER = "http://192.0.0.2:8000/latest";
+
+function updateImage() {
+    document.getElementById("camera").src =
+        SERVER + "?t=" + new Date().getTime();
+}
+
+updateImage();
+
+setInterval(updateImage,1000);
+
+</script>
+
+</body>
+</html>
