@@ -1,0 +1,165 @@
+# ESP32 Camera Streaming Prototype
+
+## Overview
+
+This project is an end-to-end embedded systems prototype that captures images using an ESP32-S3 camera, uploads them over Wi-Fi to a Python server, and displays the latest image through a browser-based viewer.
+
+The prototype serves as the communication backbone for a larger environmental sensing platform being developed at the UCLA Human-Computer Interaction Lab. Future work will integrate additional environmental sensors and transition from HTTP-based communication to an MQTT/WebSocket architecture for real-time data streaming.
+
+---
+
+## Features
+
+- ESP32-S3 camera integration
+- Wi-Fi connectivity
+- JPEG image capture
+- HTTP image upload
+- Python Flask backend
+- Browser-based image viewer
+- Real-time image updates
+
+---
+
+## System Architecture
+
+```
+                Wi-Fi
+
+        +-------------------+
+        |   ESP32-S3 Camera |
+        +-------------------+
+                  |
+          HTTP POST (JPEG)
+                  |
+                  ▼
+        +-------------------+
+        | Flask Server      |
+        | (Python)          |
+        +-------------------+
+                  |
+          Stores latest.jpg
+                  |
+                  ▼
+        +-------------------+
+        | Browser Viewer    |
+        +-------------------+
+```
+
+---
+
+## Project Structure
+
+```
+ESP32-Camera-Prototype
+│
+├── client-esp32/
+│   ├── src/
+│   ├── platformio.ini
+│   └── ...
+│
+├── server/
+│   ├── server.py
+│   ├── latest.jpg
+│   └── ...
+│
+├── viewer/
+│   └── index.html
+│
+└── README.md
+```
+
+---
+
+## How It Works
+
+1. The ESP32-S3 initializes the camera and connects to Wi-Fi.
+2. The camera captures a JPEG image.
+3. The image is uploaded to the Flask server using an HTTP POST request.
+4. The server saves the latest image.
+5. The browser requests the latest image from the server and displays it.
+
+This process repeats continuously to provide a live camera feed.
+
+---
+
+## Technologies Used
+
+### Hardware
+
+- ESP32-S3 WROOM
+- OV3660 Camera Module
+
+### Software
+
+- PlatformIO
+- Arduino Framework
+- Python
+- Flask
+- HTML
+- CSS
+- JavaScript
+
+---
+
+## Running the Project
+
+### ESP32
+
+1. Open the project in PlatformIO.
+2. Configure the Wi-Fi credentials in `main.cpp`.
+3. Set the server IP address.
+4. Upload the firmware using the USB-OTG port.
+
+### Server
+
+```
+cd server
+python3 -m venv venv
+source venv/bin/activate
+pip install flask
+python server.py
+```
+
+### Viewer
+
+Open:
+
+```
+http://<SERVER_IP>:8000
+```
+
+---
+
+## Current Status
+
+✅ ESP32 camera initialized
+
+✅ Wi-Fi communication established
+
+✅ HTTP image upload working
+
+✅ Flask server receiving images
+
+✅ Browser viewer displaying latest image
+
+---
+
+## Future Work
+
+- Integrate environmental sensors
+- MQTT communication
+- Mosquitto broker
+- FastAPI backend
+- WebSocket streaming
+- React-based dashboard
+- Custom PCB for compact sensor bundle
+
+---
+
+## Author
+
+**Swayam Shah**
+
+Mechanical Engineering
+
+University of California, Los Angeles (UCLA)
