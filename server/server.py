@@ -414,6 +414,55 @@ DASHBOARD = """
 (function(){
   "use strict";
 
+// ================= WebSocket =================
+const ws = new WebSocket(`ws://${window.location.hostname}:8001/ws`);
+
+ws.onopen = () => {
+  console.log("✅ WebSocket Connected");
+  addLog("WebSocket Connected", "good");
+};
+
+ws.onerror = (err) => {
+  console.error(err);
+  addLog("WebSocket Error", "bad");
+};
+
+ws.onclose = () => {
+  console.log("❌ WebSocket Closed");
+  addLog("WebSocket Disconnected", "bad");
+};
+
+ws.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+
+  console.log("MQTT Status:", data);
+
+  setConn(true);
+  setEspBadge(true);
+
+  els.wifiBadge.className = "badge ok";
+  els.wifiBadge.innerHTML = `<span class="dot on"></span>RSSI ${data.wifi_rssi} dBm`;
+
+  els.frameCount.textContent = data.frames_uploaded;
+  els.frameCountFooter.textContent = data.frames_uploaded;
+
+  els.lastUpload.textContent = data.received_at;
+  els.lastUploadFooter.textContent = data.received_at;
+
+  els.serverTime.textContent = data.received_at;
+
+  if (typeof data.uptime_seconds === "number") {
+    els.uptime.textContent =
+      Math.floor(data.uptime_seconds / 3600).toString().padStart(2, "0") +
+      ":" +
+      Math.floor((data.uptime_seconds % 3600) / 60).toString().padStart(2, "0") +
+      ":" +
+      (data.uptime_seconds % 60).toString().padStart(2, "0");
+  }
+
+  // MQTT updates are continuous; don't log every message.
+};
+
   // ---------- icon library (minimal inline SVGs, no external deps) ----------
   var ICON = {
     check: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
@@ -667,7 +716,6 @@ DASHBOARD = """
   refreshCamera();
 
   setInterval(updateClock, 1000);
-  setInterval(pollStatus, 1000);
   setInterval(refreshCamera, 1000);
 })();
 </script>
